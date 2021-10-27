@@ -20,7 +20,7 @@ _Some mathematicians call that the [Digital root](https://en.wikipedia.org/wiki/
 
 | Number |    Beast     |                                                                  Info |
 | ------ | :----------: | --------------------------------------------------------------------: |
-| 1      |    Kobolt    |              [Here](https://www.aidedd.org/dnd/monstres.php?vo=grick) |
+| 1      |    Kobold    |              [Here](https://www.aidedd.org/dnd/monstres.php?vo=kobold) |
 | 2      |  Cockatrice  |         [Here](https://www.aidedd.org/dnd/monstres.php?vo=Cockatrice) |
 | 3      |    Harpy     |              [Here](https://www.aidedd.org/dnd/monstres.php?vo=Harpy) |
 | 4      |    Grick     |              [Here](https://www.aidedd.org/dnd/monstres.php?vo=grick) |
