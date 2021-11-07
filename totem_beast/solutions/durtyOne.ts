@@ -1,6 +1,6 @@
 export function getMyTotemBeast(birthday: Date): string {
   const day = birthday.getDate();
-  const month = birthday.getMonth();
+  const month = birthday.getMonth() + 1;
   const year = birthday.getFullYear();
 
   let calcArray = (day + '')
