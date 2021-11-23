@@ -1,4 +1,11 @@
-import { decodeMessage, encodeMessage } from '../src/main';
+import {
+  applyDictionary,
+  buildDictionary,
+  decodeMessage,
+  encodeMessage,
+  stringifyDico,
+  WordCount,
+} from '../src/main';
 
 describe('Encode message', () => {
   it('should encode message', () => {
@@ -12,5 +19,48 @@ describe('Encode message', () => {
     expect(encodedMessage.length).toBeLessThan(expectedMaxLength);
     const decodedMessage = decodeMessage(encodedMessage);
     expect(decodedMessage).toBe(messageToEncode);
+  });
+
+  it('should replace one word from dico', () => {
+    const inputMessage =
+      'Bonjour Bonjour je suis content Bonjour. Je vais bien.';
+    const expectedMessage = '#0 #0 je suis content #0. Je vais bien.';
+
+    const dico = buildDictionary(inputMessage);
+    const output = applyDictionary(dico, inputMessage);
+    expect(output).toBe(expectedMessage);
+  });
+
+  it('should replace multiple words from dico', () => {
+    const inputMessage =
+      'Bonjour Bonjour je suis content Bonjour. Je vais bien et je suis content.';
+    const expectedMessage = '#0 #0 je suis #1 #0. Je vais bien et je suis #1.';
+
+    const dico = buildDictionary(inputMessage);
+    const output = applyDictionary(dico, inputMessage);
+    expect(output).toBe(expectedMessage);
+  });
+
+  it('should build the toString of dictionary', () => {
+    const inputDico: WordCount[] = [
+      { word: 'Bonjour', count: 3 },
+      { word: 'content', count: 4 },
+    ];
+    const expectedDico = '|0:Bonjour/1:content';
+
+    const resDico: string = stringifyDico(inputDico);
+
+    expect(resDico).toBe(expectedDico);
+  });
+
+  it('should be encoded with dico', () => {
+    const inputMessage =
+      'Bonjour Bonjour je suis content Bonjour. Je vais bien et je suis content.';
+    const expectedMessage =
+      '#0 #0 je suis #1 #0.Je vais bien et je suis #1.|0:Bonjour/1:content';
+
+    const encodedMessage = encodeMessage(inputMessage);
+
+    expect(encodedMessage).toBe(expectedMessage);
   });
 });

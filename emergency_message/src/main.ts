@@ -9,7 +9,10 @@ export function encodeMessage(message: string): string {
   // Gave read use way make spot how nor. In daughter goodness an likewise oh consider at procured wandered. Songs words wrong by me hills heard timed. Happy eat may doors songs. Be ignorant so of suitable dissuade weddings together. Least whole timed we is. An smallness deficient discourse do newspaper be an eagerness continued. Mr my ready guest ye after short at.
   // Am terminated it excellence invitation projection as. She graceful shy believed distance use nay. Lively is people so basket ladies window expect. Supply as so period it enough income he genius. Themselves acceptance bed sympathize get dissimilar way admiration son. Design for are edward regret met lovers. This are calm case roof and.
   const dico: WordCount[] = buildDictionary(message);
-  return message.replace(dotSpaceRegex, '.');
+  let messageEncoded = message.replace(dotSpaceRegex, '.');
+  messageEncoded = applyDictionary(dico, messageEncoded);
+  messageEncoded = messageEncoded + stringifyDico(dico);
+  return messageEncoded;
 }
 
 export function decodeMessage(message: string): string {
@@ -46,7 +49,28 @@ export function buildDictionary(message: string): WordCount[] {
   return dictionary.filter(wc => wc.count >= minOccurrences);
 }
 
-interface WordCount {
+export function applyDictionary(dico: WordCount[], message: string): string {
+  let messageEncoded = message;
+  dico.forEach((wordCount, index) => {
+    messageEncoded = messageEncoded.replace(
+      new RegExp(wordCount.word, 'g'),
+      `#${index}`,
+    );
+  });
+  return messageEncoded;
+}
+
+export function stringifyDico(inputDico: WordCount[]): string {
+  const dicoStarter = '|';
+  const dicoSeparator = '/';
+  return (
+    dicoStarter +
+    inputDico
+      .map((input, index) => `${index}:${input.word}`)
+      .join(dicoSeparator)
+  );
+}
+export interface WordCount {
   word: string;
   count: number;
 }
