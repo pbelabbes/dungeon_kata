@@ -2,6 +2,8 @@ const dotRegex = /(\.)/g;
 const dotSpaceRegex = /(\. )/g;
 const minWordLength = 4;
 const minOccurrences = 2;
+const DICO_STARTER = '|';
+const DICO_SEPARATOR = '/';
 
 export function encodeMessage(message: string): string {
   // Of be talent me answer do relied. Mistress in on so laughing throwing endeavor occasion welcomed. Gravity sir brandon calling can. No years do widow house delay stand. Prospect six kindness use steepest new ask. High gone kind calm call as ever is. Introduced melancholy estimating motionless on up as do. Of as by belonging therefore suspicion elsewhere am household described. Domestic suitable bachelor for landlord fat.
@@ -17,10 +19,17 @@ export function encodeMessage(message: string): string {
 
 export function decodeMessage(message: string): string {
   const dotRegex2 = /(\. \n)/g;
-  return message
+
+  const dico = convertToDico(extractStringifiedDico(message));
+
+  const extractedMessage = message.split(DICO_STARTER)[0];
+
+  const messageWithWhitespaces = extractedMessage
     .replace(dotRegex, '. ')
     .replace(dotRegex2, '.\n')
     .trim();
+
+  return applyDicoToMessage(dico, messageWithWhitespaces);
 }
 
 export function buildDictionary(message: string): WordCount[] {
@@ -61,16 +70,47 @@ export function applyDictionary(dico: WordCount[], message: string): string {
 }
 
 export function stringifyDico(inputDico: WordCount[]): string {
-  const dicoStarter = '|';
-  const dicoSeparator = '/';
   return (
-    dicoStarter +
+    DICO_STARTER +
     inputDico
       .map((input, index) => `${index}:${input.word}`)
-      .join(dicoSeparator)
+      .join(DICO_SEPARATOR)
   );
+}
+
+export function extractStringifiedDico(inputMessage: string): string {
+  const dicoStringify = inputMessage.split(DICO_STARTER)[1];
+
+  return DICO_STARTER + dicoStringify;
+}
+
+export function convertToDico(stringifiedDico: string): DicoEntry[] {
+  const cleanedStringDico = stringifiedDico.replace(DICO_STARTER, '');
+  return cleanedStringDico.split(DICO_SEPARATOR).map(entry => {
+    const entryParsed = entry.split(':');
+
+    return {
+      index: parseInt(entryParsed[0]),
+      word: entryParsed[1],
+    };
+  });
+}
+
+export function applyDicoToMessage(dico: DicoEntry[], message: string): string {
+  let output = message;
+  dico
+    .sort((a, b) => b.index - a.index)
+    .forEach(entry => {
+      output = output.replace(new RegExp('#' + entry.index, 'g'), entry.word);
+    });
+  return output;
 }
 export interface WordCount {
   word: string;
   count: number;
+}
+
+export interface DicoEntry {
+  index: number;
+  word: string;
 }

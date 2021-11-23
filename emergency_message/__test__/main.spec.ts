@@ -1,8 +1,10 @@
 import {
   applyDictionary,
   buildDictionary,
+  convertToDico,
   decodeMessage,
   encodeMessage,
+  extractStringifiedDico,
   stringifyDico,
   WordCount,
 } from '../src/main';
@@ -62,5 +64,55 @@ describe('Encode message', () => {
     const encodedMessage = encodeMessage(inputMessage);
 
     expect(encodedMessage).toBe(expectedMessage);
+  });
+
+  it('should return the stringified dico of encoded ', () => {
+    const inputMessage =
+      '#0 #0 je suis #1 #0.Je vais bien et je suis #1.|0:Bonjour/1:content';
+
+    const expectedStringifiedDico = '|0:Bonjour/1:content';
+
+    const resStringifiedDico = extractStringifiedDico(inputMessage);
+
+    expect(resStringifiedDico).toBe(expectedStringifiedDico);
+  });
+
+  it('should return the dico of stringified dico ', () => {
+    const inputStringifiedDico = '|0:Bonjour/1:content';
+    const expectedDico = [
+      {
+        index: 0,
+        word: 'Bonjour',
+      },
+      {
+        index: 1,
+        word: 'content',
+      },
+    ];
+
+    const resDico = convertToDico(inputStringifiedDico);
+
+    expect(resDico).toEqual(expectedDico);
+  });
+
+  it('should be decoded', () => {
+    const expectedMessage =
+      'Bonjour Bonjour je suis content Bonjour. Je vais bien et je suis content.';
+    const inputMessage =
+      '#0 #0 je suis #1 #0.Je vais bien et je suis #1.|0:Bonjour/1:content';
+
+    const decodedMessage = decodeMessage(inputMessage);
+
+    expect(decodedMessage).toBe(expectedMessage);
+  });
+  it('should be decoded with an index >= 10', () => {
+    const expectedMessage =
+      'Bonjour Bonjour je suis content Bonjour. Je vais bien et je suis content.';
+    const inputMessage =
+      '#10 #10 je suis #1 #10.Je vais bien et je suis #1.|1:content/10:Bonjour';
+
+    const decodedMessage = decodeMessage(inputMessage);
+
+    expect(decodedMessage).toBe(expectedMessage);
   });
 });
