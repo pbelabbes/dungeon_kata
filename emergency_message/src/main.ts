@@ -1,5 +1,7 @@
 const dotRegex = /(\.)/g;
 const dotSpaceRegex = /(\. )/g;
+const minWordLength = 4;
+const minOccurrences = 2;
 
 export function encodeMessage(message: string): string {
   // Of be talent me answer do relied. Mistress in on so laughing throwing endeavor occasion welcomed. Gravity sir brandon calling can. No years do widow house delay stand. Prospect six kindness use steepest new ask. High gone kind calm call as ever is. Introduced melancholy estimating motionless on up as do. Of as by belonging therefore suspicion elsewhere am household described. Domestic suitable bachelor for landlord fat.
@@ -28,7 +30,7 @@ export function buildDictionary(message: string): WordCount[] {
     .split(' ');
 
   messageWords.forEach(word => {
-    if (word.length > 4) {
+    if (word.length > minWordLength) {
       const wordFinded = dictionary.find(wc => wc.word === word);
       if (wordFinded) {
         wordFinded.count++;
@@ -41,7 +43,7 @@ export function buildDictionary(message: string): WordCount[] {
     }
   });
 
-  return dictionary.filter(wc => wc.count >= 2);
+  return dictionary.filter(wc => wc.count >= minOccurrences);
 }
 
 interface WordCount {
